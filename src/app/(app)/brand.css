@@ -1,0 +1,229 @@
+/* ============================================================
+   CNNTURE Brand Override — Luxury Herbal Design
+   Overrides shadcn/ui defaults to match the original CNNTURE site
+   ============================================================ */
+
+/* --- Brand Color Palette --- */
+:root {
+  --bg-base:       #F9F7F4;
+  --bg-warm:       #F2EDE6;
+  --bg-deep:       #E8E2D8;
+  --bg-dark:       #3A3732;
+  --text-primary:  #2B2722;
+  --text-secondary:#5C5852;
+  --text-muted:    #8A8680;
+  --text-dim:      #B0ACA6;
+  --text-light:    #E5E2DC;
+  --accent:        #8B7355;
+  --accent-light:  #B8A88A;
+  --accent-deep:   #5C4A3A;
+  --accent-hover:  #6B5640;
+  --cream-warm:    #F5F0E8;
+  --border-color:  #E5E1DA;
+  --border-light:  #F0EDE7;
+  --surface:       #FCFBF8;
+  --radius-brand:  2px;
+  --spacing-xl:    80px;
+  --spacing-2xl:   120px;
+}
+
+/* --- Base Typography --- */
+body {
+  font-family: 'Inter', 'Helvetica Neue', -apple-system, sans-serif;
+  font-weight: 300;
+  background: var(--bg-base);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+/* Headings — serif, light weight, generous spacing */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', ui-serif, Georgia, serif;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 0.5em; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 0.5em; }
+h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); margin-bottom: 0.4em; }
+
+/* --- Links --- */
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.4s;
+}
+a:hover { color: var(--accent); }
+
+/* --- Buttons — brand style override --- */
+button, .btn, [data-slot="button"] {
+  border-radius: var(--radius-brand) !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none !important;
+  transition: all 0.3s ease;
+}
+
+.bg-primary {
+  background-color: var(--accent) !important;
+}
+.text-primary-foreground {
+  color: #FCFBF8 !important;
+}
+.hover\:bg-primary\/90:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+button[class*="outline"], [data-slot="button"][class*="outline"] {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  background: transparent !important;
+}
+button[class*="outline"]:hover, [data-slot="button"][class*="outline"]:hover {
+  background: var(--accent) !important;
+  color: #FCFBF8 !important;
+}
+
+/* --- Header (glass-morphism) --- */
+header, .header, [class*="z-20"][class*="border-b"] {
+  background: rgba(249, 247, 244, 0.72) !important;
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid rgba(229, 225, 218, 0.5) !important;
+  position: sticky !important;
+  top: 0;
+  z-index: 40 !important;
+}
+
+header a, .header a, [class*="z-20"] a {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+header a:hover, .header a:hover {
+  color: var(--accent);
+}
+
+/* --- Hero Section --- */
+[class*="hero"], section:first-of-type {
+  background: var(--bg-warm);
+  padding-top: var(--spacing-2xl);
+  padding-bottom: var(--spacing-2xl);
+}
+
+[class*="hero"] h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+}
+
+/* --- Product Cards --- */
+[class*="product"] {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-brand);
+  transition: all 0.4s ease;
+}
+[class*="product"]:hover {
+  box-shadow: 0 8px 30px rgba(43,39,34,0.06);
+  transform: translateY(-2px);
+}
+
+/* --- Sections --- */
+section {
+  padding: var(--spacing-xl) 0;
+}
+
+section:nth-child(even) {
+  background: var(--bg-warm);
+}
+
+section:nth-child(odd) {
+  background: var(--bg-base);
+}
+
+/* --- Footer (dark, like original CNNTURE) --- */
+footer {
+  background: var(--bg-dark) !important;
+  color: var(--text-light) !important;
+  padding: 60px 0 40px;
+}
+
+footer h3, footer h5 {
+  color: var(--text-light) !important;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+
+footer a {
+  color: var(--text-dim) !important;
+  font-size: 13px;
+  transition: color 0.3s;
+}
+footer a:hover {
+  color: var(--accent-light) !important;
+}
+
+footer .border-t,
+footer [class*="border-t"] {
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+footer p, footer span {
+  color: var(--text-dim);
+}
+
+/* --- Container --- */
+.container {
+  max-width: 1200px;
+  padding: 0 32px;
+}
+
+/* --- Inputs --- */
+input, select, textarea {
+  border-radius: var(--radius-brand) !important;
+  border-color: var(--border-color) !important;
+  background: var(--surface);
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 300;
+}
+
+/* --- Cards / Dialogs --- */
+[class*="card"], .rounded-lg, [class*="rounded"] {
+  border-radius: var(--radius-brand) !important;
+}
+
+/* --- Hero Low Impact (CNNTURE style) --- */
+[class*="lowImpact"] h1 {
+  font-size: 3rem;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+}
+
+/* --- Image containers --- */
+[class*="aspect-square"] {
+  border-radius: var(--radius-brand);
+  overflow: hidden;
+}
+
+/* --- Price display --- */
+[class*="price"] {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+/* --- Section spacing --- */
+section > .container:first-child {
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+}
