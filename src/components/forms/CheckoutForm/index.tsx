@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import React, { useCallback, FormEvent } from 'react'
 import { useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { Address } from '@/payload-types'
+import { useT } from '@/providers/LocaleProvider'
 
 type Props = {
   customerEmail?: string
@@ -20,6 +21,7 @@ export const CheckoutForm: React.FC<Props> = ({
   billingAddress,
   setProcessingPayment,
 }) => {
+  const t = useT()
   const stripe = useStripe()
   const elements = useElements()
   const [error, setError] = React.useState<null | string>(null)
@@ -97,8 +99,8 @@ export const CheckoutForm: React.FC<Props> = ({
               }
             } catch (err) {
               console.log({ err })
-              const msg = err instanceof Error ? err.message : 'Something went wrong.'
-              setError(`Error while confirming order: ${msg}`)
+              const msg = err instanceof Error ? err.message : t('checkout.something_wrong')
+              setError(`${t('checkout.error_confirm')}${msg}`)
               setIsLoading(false)
             }
           }
@@ -107,8 +109,8 @@ export const CheckoutForm: React.FC<Props> = ({
             setIsLoading(false)
           }
         } catch (err) {
-          const msg = err instanceof Error ? err.message : 'Something went wrong.'
-          setError(`Error while submitting payment: ${msg}`)
+          const msg = err instanceof Error ? err.message : t('checkout.something_wrong')
+          setError(`${t('checkout.error_payment')}${msg}`)
           setIsLoading(false)
           setProcessingPayment(false)
         }
@@ -138,7 +140,7 @@ export const CheckoutForm: React.FC<Props> = ({
       <PaymentElement />
       <div className="mt-8 flex gap-4">
         <Button disabled={!stripe || isLoading} type="submit" variant="default">
-          {isLoading ? 'Loading...' : 'Pay now'}
+          {isLoading ? t('checkout.loading') : t('checkout.pay_now')}
         </Button>
       </div>
     </form>

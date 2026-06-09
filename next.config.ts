@@ -9,6 +9,9 @@ import { redirects } from './redirects'
 
 const NEXT_PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
+const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+const serverHost = serverUrl.replace(/^https?:\/\//, '').split(':')[0]
+
 const nextConfig: NextConfig = {
   // Temporarily required on Windows until Next.js fixes Turbopack Sass resolution.
   // See: https://github.com/vercel/next.js/issues/86431
@@ -16,22 +19,12 @@ const nextConfig: NextConfig = {
     loadPaths: ['./node_modules/@payloadcms/ui/dist/scss/'],
   },
   images: {
-    localPatterns: [
-      {
-        pathname: '/api/media/file/**',
-      },
+    remotePatterns: [
+      { protocol: 'http' as const, hostname: 'localhost' },
+      { protocol: 'https' as const, hostname: serverHost },
+      { protocol: 'https' as const, hostname: 'images.unsplash.com' },
     ],
     qualities: [90, 100],
-    remotePatterns: [
-      ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
-        const url = new URL(item)
-
-        return {
-          hostname: url.hostname,
-          protocol: url.protocol.replace(':', '') as 'http' | 'https',
-        }
-      }),
-    ],
   },
   reactStrictMode: true,
   redirects,

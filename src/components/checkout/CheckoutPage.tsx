@@ -25,19 +25,18 @@ import { AddressItem } from '@/components/addresses/AddressItem'
 import { FormItem } from '@/components/forms/FormItem'
 import { toast } from 'sonner'
 import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { useT } from '@/providers/LocaleProvider'
 
 const apiKey = `${process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}`
 const stripe = loadStripe(apiKey)
 
 export const CheckoutPage: React.FC = () => {
+  const t = useT()
   const { user } = useAuth()
   const router = useRouter()
   const { cart } = useCart()
   const [error, setError] = useState<null | string>(null)
   const { theme } = useTheme()
-  /**
-   * State to manage the email input for guest checkout.
-   */
   const [email, setEmail] = useState('')
   const [emailEditable, setEmailEditable] = useState(true)
   const [paymentData, setPaymentData] = useState<null | Record<string, unknown>>(null)
@@ -54,17 +53,12 @@ export const CheckoutPage: React.FC = () => {
     (email || user) && billingAddress && (billingAddressSameAsShipping || shippingAddress),
   )
 
-  // On initial load wait for addresses to be loaded and check to see if we can prefill a default one
   useEffect(() => {
-    if (!shippingAddress) {
-      if (addresses && addresses.length > 0) {
-        const defaultAddress = addresses[0]
-        if (defaultAddress) {
-          setBillingAddress(defaultAddress)
-        }
-      }
+    if (!shippingAddress && addresses && addresses.length > 0) {
+      const defaultAddress = addresses[0]
+      if (defaultAddress) setBillingAddress(defaultAddress)
     }
-  }, [addresses])
+  }, [addresses, shippingAddress])
 
   useEffect(() => {
     return () => {
@@ -87,22 +81,18 @@ export const CheckoutPage: React.FC = () => {
           },
         })) as Record<string, unknown>
 
-        if (paymentData) {
-          setPaymentData(paymentData)
-        }
+        if (paymentData) setPaymentData(paymentData)
       } catch (error) {
         const errorData = error instanceof Error ? JSON.parse(error.message) : {}
-        let errorMessage = 'An error occurred while initiating payment.'
-
+        let errorMessage = t('checkout.payment_error')
         if (errorData?.cause?.code === 'OutOfStock') {
-          errorMessage = 'One or more items in your cart are out of stock.'
+          errorMessage = t('checkout.out_of_stock')
         }
-
         setError(errorMessage)
         toast.error(errorMessage)
       }
     },
-    [billingAddress, billingAddressSameAsShipping, shippingAddress],
+    [billingAddress, billingAddressSameAsShipping, shippingAddress, email, initiatePayment, t],
   )
 
   if (!stripe) return null
@@ -111,7 +101,7 @@ export const CheckoutPage: React.FC = () => {
     return (
       <div className="py-12 w-full items-center justify-center">
         <div className="prose dark:prose-invert text-center max-w-none self-center mb-8">
-          <p>Processing your payment...</p>
+          <p>{t('checkout.processing')}</p>
         </div>
         <LoadingSpinner />
       </div>
@@ -121,8 +111,8 @@ export const CheckoutPage: React.FC = () => {
   if (cartIsEmpty) {
     return (
       <div className="prose dark:prose-invert py-12 w-full items-center">
-        <p>Your cart is empty.</p>
-        <Link href="/search">Continue shopping?</Link>
+        <p>{t('checkout.empty_cart')}</p>
+        <Link href="/search">{t('checkout.continue_shopping')}</Link>
       </div>
     )
   }
@@ -130,39 +120,38 @@ export const CheckoutPage: React.FC = () => {
   return (
     <div className="flex flex-col items-stretch justify-stretch my-8 md:flex-row grow gap-10 md:gap-6 lg:gap-8">
       <div className="basis-full lg:basis-2/3 flex flex-col gap-8 justify-stretch">
-        <h2 className="font-medium text-3xl">Contact</h2>
+        <h2 className="font-medium text-3xl">{t('checkout.contact')}</h2>
         {!user && (
-          <div className=" bg-accent dark:bg-black rounded-lg p-4 w-full flex items-center">
+          <div className="bg-accent dark:bg-black rounded-lg p-4 w-full flex items-center">
             <div className="prose dark:prose-invert">
               <Button asChild className="no-underline text-inherit" variant="outline">
-                <Link href="/login">Log in</Link>
+                <Link href="/login">{t('checkout.login')}</Link>
               </Button>
               <p className="mt-0">
-                <span className="mx-2">or</span>
-                <Link href="/create-account">create an account</Link>
+                <span className="mx-2">{t('checkout.or')}</span>
+                <Link href="/create-account">{t('checkout.create_account')}</Link>
               </p>
             </div>
           </div>
         )}
         {user ? (
-          <div className="bg-accent dark:bg-card rounded-lg p-4 ">
+          <div className="bg-accent dark:bg-card rounded-lg p-4">
             <div>
               <p>{user.email}</p>{' '}
               <p>
-                Not you?{' '}
+                {t('checkout.not_you')}{' '}
                 <Link className="underline" href="/logout">
-                  Log out
+                  {t('checkout.logout')}
                 </Link>
               </p>
             </div>
           </div>
         ) : (
-          <div className="bg-accent dark:bg-black rounded-lg p-4 ">
+          <div className="bg-accent dark:bg-black rounded-lg p-4">
             <div>
-              <p className="mb-4">Enter your email to checkout as a guest.</p>
-
+              <p className="mb-4">{t('checkout.guest_email')}</p>
               <FormItem className="mb-6">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">{t('checkout.email_label')}</Label>
                 <Input
                   disabled={!emailEditable}
                   id="email"
@@ -172,49 +161,37 @@ export const CheckoutPage: React.FC = () => {
                   type="email"
                 />
               </FormItem>
-
               <Button
                 disabled={!email || !emailEditable}
-                onClick={(e) => {
-                  e.preventDefault()
-                  setEmailEditable(false)
-                }}
+                onClick={(e) => { e.preventDefault(); setEmailEditable(false) }}
                 variant="default"
               >
-                Continue as guest
+                {t('checkout.continue_guest')}
               </Button>
             </div>
           </div>
         )}
 
-        <h2 className="font-medium text-3xl">Address</h2>
+        <h2 className="font-medium text-3xl">{t('checkout.address_section')}</h2>
 
         {billingAddress ? (
           <div>
             <AddressItem
               actions={
-                <Button
-                  variant={'outline'}
-                  disabled={Boolean(paymentData)}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setBillingAddress(undefined)
-                  }}
-                >
-                  Remove
+                <Button variant="outline" disabled={Boolean(paymentData)}
+                  onClick={(e) => { e.preventDefault(); setBillingAddress(undefined) }}>
+                  {t('checkout.remove')}
                 </Button>
               }
               address={billingAddress}
             />
           </div>
         ) : user ? (
-          <CheckoutAddresses heading="Billing address" setAddress={setBillingAddress} />
+          <CheckoutAddresses heading={t('checkout.billing_address')} setAddress={setBillingAddress} />
         ) : (
           <CreateAddressModal
             disabled={!email || Boolean(emailEditable)}
-            callback={(address) => {
-              setBillingAddress(address)
-            }}
+            callback={(address) => setBillingAddress(address)}
             skipSubmission={true}
           />
         )}
@@ -224,11 +201,9 @@ export const CheckoutPage: React.FC = () => {
             id="shippingTheSameAsBilling"
             checked={billingAddressSameAsShipping}
             disabled={Boolean(paymentData || (!user && (!email || Boolean(emailEditable))))}
-            onCheckedChange={(state) => {
-              setBillingAddressSameAsShipping(state as boolean)
-            }}
+            onCheckedChange={(state) => setBillingAddressSameAsShipping(state as boolean)}
           />
-          <Label htmlFor="shippingTheSameAsBilling">Shipping is the same as billing</Label>
+          <Label htmlFor="shippingTheSameAsBilling">{t('checkout.shipping_same')}</Label>
         </div>
 
         {!billingAddressSameAsShipping && (
@@ -237,15 +212,9 @@ export const CheckoutPage: React.FC = () => {
               <div>
                 <AddressItem
                   actions={
-                    <Button
-                      variant={'outline'}
-                      disabled={Boolean(paymentData)}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setShippingAddress(undefined)
-                      }}
-                    >
-                      Remove
+                    <Button variant="outline" disabled={Boolean(paymentData)}
+                      onClick={(e) => { e.preventDefault(); setShippingAddress(undefined) }}>
+                      {t('checkout.remove')}
                     </Button>
                   }
                   address={shippingAddress}
@@ -253,15 +222,13 @@ export const CheckoutPage: React.FC = () => {
               </div>
             ) : user ? (
               <CheckoutAddresses
-                heading="Shipping address"
-                description="Please select a shipping address."
+                heading={t('checkout.shipping_address')}
+                description={t('checkout.select_shipping')}
                 setAddress={setShippingAddress}
               />
             ) : (
               <CreateAddressModal
-                callback={(address) => {
-                  setShippingAddress(address)
-                }}
+                callback={(address) => setShippingAddress(address)}
                 disabled={!email || Boolean(emailEditable)}
                 skipSubmission={true}
               />
@@ -273,27 +240,17 @@ export const CheckoutPage: React.FC = () => {
           <Button
             className="self-start"
             disabled={!canGoToPayment}
-            onClick={(e) => {
-              e.preventDefault()
-              void initiatePaymentIntent('stripe')
-            }}
+            onClick={(e) => { e.preventDefault(); void initiatePaymentIntent('stripe') }}
           >
-            Go to payment
+            {t('checkout.go_payment')}
           </Button>
         )}
 
         {!paymentData?.['clientSecret'] && error && (
           <div className="my-8">
             <Message error={error} />
-
-            <Button
-              onClick={(e) => {
-                e.preventDefault()
-                router.refresh()
-              }}
-              variant="default"
-            >
-              Try again
+            <Button onClick={(e) => { e.preventDefault(); router.refresh() }} variant="default">
+              {t('checkout.try_again')}
             </Button>
           </div>
         )}
@@ -302,8 +259,8 @@ export const CheckoutPage: React.FC = () => {
           {/* @ts-ignore */}
           {paymentData && paymentData?.['clientSecret'] && (
             <div className="pb-16">
-              <h2 className="font-medium text-3xl">Payment</h2>
-              {error && <p>{`Error: ${error}`}</p>}
+              <h2 className="font-medium text-3xl">{t('checkout.payment')}</h2>
+              {error && <p>{t('checkout.error_prefix')}{error}</p>}
               <Elements
                 options={{
                   appearance: {
@@ -316,11 +273,10 @@ export const CheckoutPage: React.FC = () => {
                       colorBackground: theme === 'dark' ? '#0a0a0a' : cssVariables.colors.base0,
                       colorDanger: cssVariables.colors.error500,
                       colorDangerText: cssVariables.colors.error500,
-                      colorIcon:
-                        theme === 'dark' ? cssVariables.colors.base0 : cssVariables.colors.base1000,
+                      colorIcon: theme === 'dark' ? cssVariables.colors.base0 : cssVariables.colors.base1000,
                       colorText: theme === 'dark' ? '#858585' : cssVariables.colors.base1000,
                       colorTextPlaceholder: '#858585',
-                      fontFamily: 'Geist, sans-serif',
+                      fontFamily: 'Inter, sans-serif',
                       fontSizeBase: '16px',
                       fontWeightBold: '600',
                       fontWeightNormal: '500',
@@ -337,12 +293,8 @@ export const CheckoutPage: React.FC = () => {
                     billingAddress={billingAddress}
                     setProcessingPayment={setProcessingPayment}
                   />
-                  <Button
-                    variant="ghost"
-                    className="self-start"
-                    onClick={() => setPaymentData(null)}
-                  >
-                    Cancel payment
+                  <Button variant="ghost" className="self-start" onClick={() => setPaymentData(null)}>
+                    {t('checkout.cancel_payment')}
                   </Button>
                 </div>
               </Elements>
@@ -353,46 +305,27 @@ export const CheckoutPage: React.FC = () => {
 
       {!cartIsEmpty && (
         <div className="basis-full lg:basis-1/3 lg:pl-8 p-8 border-none bg-primary/5 flex flex-col gap-8 rounded-lg">
-          <h2 className="text-3xl font-medium">Your cart</h2>
+          <h2 className="text-3xl font-medium">{t('checkout.your_cart')}</h2>
           {cart?.items?.map((item, index) => {
             if (typeof item.product === 'object' && item.product) {
-              const {
-                product,
-                product: { id, meta, title, gallery },
-                quantity,
-                variant,
-              } = item
-
+              const { product, product: { id, meta, title, gallery }, quantity, variant } = item
               if (!quantity) return null
-
               let image = gallery?.[0]?.image || meta?.image
               let price = product?.priceInUSD
-
               const isVariant = Boolean(variant) && typeof variant === 'object'
-
               if (isVariant) {
                 price = variant?.priceInUSD
-
                 const imageVariant = product.gallery?.find((item) => {
                   if (!item.variantOption) return false
-                  const variantOptionID =
-                    typeof item.variantOption === 'object'
-                      ? item.variantOption.id
-                      : item.variantOption
-
+                  const variantOptionID = typeof item.variantOption === 'object' ? item.variantOption.id : item.variantOption
                   const hasMatch = variant?.options?.some((option) => {
                     if (typeof option === 'object') return option.id === variantOptionID
                     else return option === variantOptionID
                   })
-
                   return hasMatch
                 })
-
-                if (imageVariant && typeof imageVariant.image !== 'string') {
-                  image = imageVariant.image
-                }
+                if (imageVariant && typeof imageVariant.image !== 'string') image = imageVariant.image
               }
-
               return (
                 <div className="flex items-start gap-4" key={index}>
                   <div className="flex items-stretch justify-stretch h-20 w-20 p-2 rounded-lg border">
@@ -407,20 +340,14 @@ export const CheckoutPage: React.FC = () => {
                       <p className="font-medium text-lg">{title}</p>
                       {variant && typeof variant === 'object' && (
                         <p className="text-sm font-mono text-primary/50 tracking-widest">
-                          {variant.options
-                            ?.map((option) => {
-                              if (typeof option === 'object') return option.label
-                              return null
-                            })
-                            .join(', ')}
+                          {variant.options?.map((option) => {
+                            if (typeof option === 'object') return option.label
+                            return null
+                          }).join(', ')}
                         </p>
                       )}
-                      <div>
-                        {'x'}
-                        {quantity}
-                      </div>
+                      <div>{'x'}{quantity}</div>
                     </div>
-
                     {typeof price === 'number' && <Price amount={price} />}
                   </div>
                 </div>
@@ -430,7 +357,7 @@ export const CheckoutPage: React.FC = () => {
           })}
           <hr />
           <div className="flex justify-between items-center gap-2">
-            <span className="uppercase">Total</span>{' '}
+            <span className="uppercase">{t('cart.total')}</span>{' '}
             <Price className="text-3xl font-medium" amount={cart.subtotal || 0} />
           </div>
         </div>
