@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
-import { locales, defaultLocale, type Locale, uiTranslations, localeNames, getLocaleFromPath } from '@/i18n/config'
+import { locales, defaultLocale, type Locale, localeNames, getLocaleFromPath } from '@/i18n/config'
 
 type LocaleContextType = {
   locale: Locale
@@ -18,23 +18,25 @@ const LocaleContext = createContext<LocaleContextType>({
   localeNames,
 })
 
+/**
+ * LocaleProvider receives translations as a prop from the server layout.
+ * This prevents the 75KB uiTranslations dict from being bundled into client-side JS.
+ */
 export function LocaleProvider({
   children,
   locale: serverLocale,
+  translations,
 }: {
   children: ReactNode
   locale: Locale
+  translations: Record<string, string>
 }) {
   const pathname = usePathname()
-  // Client-side: derive from URL pathname (survives SPA navigation)
-  // Server-side: fall back to layout-provided locale
   const pathLocale = pathname ? getLocaleFromPath(pathname) : null
   const locale = pathLocale || serverLocale
 
-  const dict = uiTranslations[locale] || uiTranslations[defaultLocale]
-
   const t = (key: string): string => {
-    return dict[key] || uiTranslations[defaultLocale][key] || key
+    return translations[key] || key
   }
 
   return (
