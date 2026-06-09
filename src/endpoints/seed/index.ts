@@ -19,17 +19,23 @@ const categories = [
 export const seed = async ({ payload, req }: { payload: Payload; req: PayloadRequest }) => {
   payload.logger.info('Seeding CNNTURE database...')
 
-  // Clear
-  await Promise.all(
-    globals.map((g) =>
-      payload.updateGlobal({ slug: g, data: { navItems: [] }, depth: 0, context: { disableRevalidate: true } }),
-    ),
-  )
-  for (const c of collections) {
-    await payload.db.deleteMany({ collection: c, req, where: {} })
-    if (payload.collections[c]?.config?.versions) {
-      await payload.db.deleteVersions({ collection: c, req, where: {} })
+  // Clear (skip if called from onInit which has no req)
+  try {
+    await Promise.all(
+      globals.map((g) =>
+        payload.updateGlobal({ slug: g, data: { navItems: [] }, depth: 0, context: { disableRevalidate: true } }),
+      ),
+    )
+    for (const c of collections) {
+      if (req) {
+        await payload.db.deleteMany({ collection: c, req, where: {} })
+        if (payload.collections[c]?.config?.versions) {
+          await payload.db.deleteVersions({ collection: c, req, where: {} })
+        }
+      }
     }
+  } catch (_) {
+    // On first deploy the DB is empty, skip clearing
   }
 
   // Categories
