@@ -1,60 +1,50 @@
 import type { Product, Variant } from '@/payload-types'
-
 import Link from 'next/link'
 import React from 'react'
-import clsx from 'clsx'
 import { Media } from '@/components/Media'
 import { Price } from '@/components/Price'
 
-type Props = {
-  product: Partial<Product>
-}
+type Props = { product: Partial<Product> }
 
 export const ProductGridItem: React.FC<Props> = ({ product }) => {
-  const { gallery, priceInUSD, title } = product
-
+  const { gallery, priceInUSD, title, subtitle, personality } = product
   let price = priceInUSD
-
   const variants = product.variants?.docs
-
-  if (variants && variants.length > 0) {
-    const variant = variants[0]
-    if (
-      variant &&
-      typeof variant === 'object' &&
-      variant?.priceInUSD &&
-      typeof variant.priceInUSD === 'number'
-    ) {
-      price = variant.priceInUSD
-    }
+  if (variants?.length) {
+    const v = variants[0]
+    if (v && typeof v === 'object' && typeof v.priceInUSD === 'number') price = v.priceInUSD
   }
-
-  const image =
-    gallery?.[0]?.image && typeof gallery[0]?.image !== 'string' ? gallery[0]?.image : false
+  const image = gallery?.[0]?.image && typeof gallery[0]?.image !== 'string' ? gallery[0]?.image : false
 
   return (
-    <Link className="relative inline-block h-full w-full group" href={`/products/${product.slug}`}>
-      {image ? (
-        <Media
-          className={clsx(
-            'relative aspect-square object-cover border rounded-2xl p-8 bg-primary-foreground',
-          )}
-          height={80}
-          imgClassName={clsx('h-full w-full object-cover rounded-2xl', {
-            'transition duration-300 ease-in-out group-hover:scale-102': true,
-          })}
-          resource={image}
-          width={80}
-        />
-      ) : null}
-
-      <div className="font-mono text-primary/50 group-hover:text-primary flex justify-between items-center mt-4">
-        <div>{title}</div>
-
-        {typeof price === 'number' && (
-          <div className="">
-            <Price amount={price} />
+    <Link className="cnnture-product-card block group" href={`/products/${product.slug}`}>
+      <div className="cnnture-product-card__image-wrap">
+        {image ? (
+          <Media
+            className="aspect-[4/5] overflow-hidden"
+            imgClassName="w-full h-full object-cover transition duration-600 ease-out group-hover:scale-105"
+            resource={image} width={600} height={750}
+          />
+        ) : (
+          <div className="aspect-[4/5] bg-[#F2EDE6] flex items-center justify-center">
+            <span className="text-xs text-[#B0ACA6] tracking-widest">CNNTURE</span>
           </div>
+        )}
+      </div>
+      <div className="mt-4 space-y-1">
+        <h3 className="text-base font-serif font-light tracking-wider text-[#2B2722]">
+          {title || ''}
+        </h3>
+        {subtitle && (
+          <p className="text-xs tracking-wider text-[#8A8680]">{subtitle}</p>
+        )}
+        {personality && (
+          <p className="text-xs italic text-[#B0ACA6] leading-relaxed">{personality}</p>
+        )}
+        {typeof price === 'number' && (
+          <p className="text-sm pt-1 text-[#8B7355] tracking-wider">
+            ${price}
+          </p>
         )}
       </div>
     </Link>

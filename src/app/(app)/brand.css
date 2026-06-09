@@ -83,29 +83,64 @@ button[class*="outline"], a[class*="outline"] {
   transform: translateY(-2px);
 }
 
-/* Footer — dark */
-footer {
+/* Footer — dark CNNTURE style (applied to all footer elements) */
+footer,
+footer * {
   background: #3A3732 !important;
-  color: #E5E2DC !important;
-  padding: 60px 0 40px !important;
 }
 
-footer h3, footer h5 {
-  color: #E5E2DC !important;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+footer div[class*="border-t"] {
+  border-color: rgba(255,255,255,0.08) !important;
 }
 
-footer a {
+footer h3, footer h5, footer nav h3 {
+  color: #E5E2DC !important;
+  font-size: 10px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 400 !important;
+}
+
+footer a, footer p, footer span {
   color: #B0ACA6 !important;
+  font-size: 12px !important;
 }
 
 footer a:hover {
   color: #C4A97D !important;
 }
 
-footer [class*="border-t"] {
-  border-color: rgba(255,255,255,0.08) !important;
+footer .container.mx-auto p, footer .container.mx-auto a {
+  color: #8A8680 !important;
+  font-size: 11px !important;
+}
+
+/* Navigation — CNNTURE brand style */
+[class*="z-20"][class*="border-b"] a,
+[class*="z-20"][class*="border-b"] button {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #8A8680 !important;
+}
+
+[class*="z-20"][class*="border-b"] a:hover {
+  color: #8B7355 !important;
+}
+
+/* Product Cards — CNNTURE luxury style */
+.cnnture-product-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.cnnture-product-card__image-wrap {
+  border-radius: 2px;
+  overflow: hidden;
+  background: #F2EDE6;
 }
 
 /* Scroll reveal */
