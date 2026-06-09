@@ -1,397 +1,134 @@
 /* ============================================================
    CNNTURE Brand Design — Eastern Herbal Luxury
-   Layout & Component Styles
    ============================================================ */
 
-/* --- Hero Section — 全屏品牌标语 --- */
-[class*="hero"] h1,
-.lowImpact h1,
-article h1 {
+/* Hero — brand typography */
+article h1, .lowImpact h1 {
   font-size: clamp(2.2rem, 6vw, 3.6rem) !important;
   font-weight: 300 !important;
   letter-spacing: 0.06em !important;
   line-height: 1.3 !important;
-  color: var(--foreground) !important;
 }
 
-article.pt-16 {
+article {
   padding-top: 80px !important;
   padding-bottom: 60px !important;
 }
 
-/* --- Section: alternating backgrounds --- */
-article section,
-div[class*="content"] > div,
-.cta-block,
-.content-block {
-  padding: 60px 0;
+/* Section spacing */
+article section, .content-block {
+  padding: 48px 0;
 }
 
-/* Brand Intro / Newsletter — centered, spacious */
-.newsletter-section {
-  text-align: center;
-  padding: 80px 0;
-}
-
-/* --- Category Grid equivalent — content block with "half" columns --- */
-.content-block .columns:has(> .half:nth-child(3)),
-.content-block .columns:has(> .half:nth-child(4)) {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-/* --- Seasonal / Split layout --- */
-.seasonal-wrapper {
-  display: flex;
-  gap: 48px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* --- CTA blocks — centered with breathing room --- */
-.cta-block {
-  text-align: center;
-  padding: 40px 0;
-}
-
-.cta-block .links {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
-/* --- Content blocks — generous spacing --- */
-.content-block h2 {
-  margin-bottom: 20px;
-}
-
-.content-block p {
-  margin-bottom: 16px;
-  line-height: 1.8;
-}
-
-/* --- Hero Low Impact — brand style --- */
-.lowImpact h1 {
-  color: var(--foreground) !important;
-  margin-bottom: 8px;
-}
-
-.lowImpact p {
-  color: var(--muted-foreground);
-  font-size: 16px;
-  max-width: 600px;
-}
-
-/* --- Product Cards in Shop --- */
-.product-grid-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-  transition: all 0.4s ease;
-}
-
-.product-grid-item:hover {
-  box-shadow: 0 8px 30px rgba(43,39,34,0.06);
-  transform: translateY(-2px);
-}
-
-.product-grid-item img {
-  transition: transform 0.6s ease;
-}
-
-.product-grid-item:hover img {
-  transform: scale(1.04);
-}
-
-.product-grid-item .price {
-  font-family: 'Inter', sans-serif;
-  color: var(--primary);
-  font-weight: 400;
-}
-
-/* --- Container max-width --- */
-.container {
-  max-width: 1200px !important;
-}
-
-/* --- Prose overrides for brand --- */
-.prose {
-  font-family: 'Inter', sans-serif;
-  color: var(--muted-foreground);
-  line-height: 1.8;
-}
-
+/* Prose: serif headings, sans body, warm colors */
 .prose h1, .prose h2, .prose h3 {
   font-family: 'Cormorant Garamond', 'Noto Serif SC', ui-serif, serif !important;
   font-weight: 300 !important;
-  color: var(--foreground) !important;
+  color: #2B2722 !important;
 }
 
-.prose h1 { font-size: clamp(2rem, 5vw, 3.2rem) !important; }
-.prose h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem) !important; }
-.prose h3 { font-size: clamp(1.2rem, 2.5vw, 1.5rem) !important; }
+.prose h1 { font-size: clamp(2rem, 5vw, 3rem) !important; }
+.prose h2 { font-size: clamp(1.5rem, 3.5vw, 2rem) !important; }
+.prose h3 { font-size: clamp(1.1rem, 2.5vw, 1.4rem) !important; }
+
+.prose p {
+  color: #5C5852;
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
 
 .prose a {
-  color: var(--primary);
+  color: #8B7355;
   text-decoration: none;
-  transition: color 0.3s;
 }
 
 .prose a:hover {
-  color: var(--accent);
+  color: #C4A97D;
 }
 
-/* --- Buttons --- */
-.btn-primary, .bg-primary, button[class*="default"] {
-  background-color: var(--primary) !important;
-  color: #FCFBF8 !important;
+/* Buttons */
+button, [data-slot="button"], .btn {
   border-radius: 2px !important;
   font-weight: 400 !important;
   letter-spacing: 0.06em !important;
   transition: all 0.3s ease !important;
 }
 
-button[class*="outline"], a[class*="outline"] {
-  border: 1px solid var(--primary) !important;
-  color: var(--primary) !important;
-  border-radius: 2px !important;
-  font-weight: 400 !important;
-  letter-spacing: 0.06em !important;
+.bg-primary, button[class*="default"] {
+  background-color: #8B7355 !important;
+  color: #FCFBF8 !important;
 }
 
-/* --- Section label --- */
-.section-label {
+button[class*="outline"], a[class*="outline"] {
+  border: 1px solid #8B7355 !important;
+  color: #8B7355 !important;
+}
+
+/* Header — glass morphism */
+[class*="z-20"][class*="border-b"] {
+  background: rgba(249, 247, 244, 0.72) !important;
+  backdrop-filter: blur(16px);
+}
+
+/* Product cards */
+[class*="product"] {
+  background: #FCFBF8;
+  border: 1px solid #E5E1DA;
+  border-radius: 2px;
+  transition: all 0.4s ease;
+}
+
+[class*="product"]:hover {
+  box-shadow: 0 8px 30px rgba(43,39,34,0.06);
+  transform: translateY(-2px);
+}
+
+/* Footer — dark */
+footer {
+  background: #3A3732 !important;
+  color: #E5E2DC !important;
+  padding: 60px 0 40px !important;
+}
+
+footer h3, footer h5 {
+  color: #E5E2DC !important;
   font-size: 11px;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted-foreground);
-  margin-bottom: 12px;
 }
 
-/* --- Rich text spacing --- */
-.rich-text p + p {
-  margin-top: 12px;
+footer a {
+  color: #B0ACA6 !important;
 }
 
-.rich-text h2 + p {
-  margin-top: 16px;
+footer a:hover {
+  color: #C4A97D !important;
 }
 
-/* --- Image containers --- */
-[class*="aspect-square"] {
-  border-radius: 2px;
-  overflow: hidden;
+footer [class*="border-t"] {
+  border-color: rgba(255,255,255,0.08) !important;
 }
 
-/* --- Background alternating for content sections --- */
-article section:nth-child(even),
-div > .content-block:nth-child(even) {
-  background: var(--secondary);
+/* Scroll reveal */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
-/* Spacing between blocks */
-.blocks-wrapper > * + * {
-  margin-top: 0;
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-/* === BRAND-SPECIFIC SECTION STYLES === */
-
-/* Brand Intro — centered, minimal, elegant */
-[data-block="brand-intro"] {
-  text-align: center;
-  padding: 80px 32px;
-}
-
-/* Category Grid — 4 image cards */
-.cnnture-category-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border);
-}
-
-.cnnture-category-card {
-  position: relative;
-  aspect-ratio: 3/4;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: flex-end;
-  padding: 24px;
-  transition: all 0.4s ease;
-  text-decoration: none;
-  overflow: hidden;
-}
-
-.cnnture-category-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(transparent 40%, rgba(43,39,34,0.7));
-  transition: opacity 0.4s;
-}
-
-.cnnture-category-card:hover::before {
-  opacity: 0.9;
-}
-
-.cnnture-category-card:hover {
-  transform: scale(1.02);
-}
-
-.cnnture-category-card__title {
-  position: relative;
-  z-index: 1;
-  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
-  font-size: 1.4rem;
-  color: #fff;
-  font-weight: 300;
-  letter-spacing: 0.06em;
-}
-
-.cnnture-category-card__sub {
-  position: relative;
-  z-index: 1;
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  color: rgba(255,255,255,0.7);
-  letter-spacing: 0.1em;
-  margin-top: 4px;
-}
-
-/* Seasonal Split */
-.cnnture-seasonal {
-  display: flex;
-  gap: 48px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.cnnture-seasonal__image {
-  flex: 1;
-  min-width: 280px;
-  aspect-ratio: 4/5;
-  background-size: cover;
-  background-position: center;
-}
-
-.cnnture-seasonal__text {
-  flex: 1;
-  min-width: 280px;
-}
-
-/* Journal Cards */
-.cnnture-journal-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.cnnture-journal-card {
-  padding: 32px 24px;
-  border: 1px solid var(--border);
-  transition: all 0.3s ease;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
-.cnnture-journal-card:hover {
-  border-color: var(--primary);
-  box-shadow: 0 4px 20px rgba(43,39,34,0.06);
-}
-
-.cnnture-journal-card__date {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--muted-foreground);
-  margin-bottom: 12px;
-}
-
-.cnnture-journal-card__title {
-  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
-  font-size: 1.2rem;
-  font-weight: 400;
-  color: var(--foreground);
-  margin-bottom: 8px;
-}
-
-.cnnture-journal-card__excerpt {
-  font-size: 13px;
-  color: var(--muted-foreground);
-  line-height: 1.6;
-}
-
-/* Gift Banner Split */
-.cnnture-gift-banner {
-  display: flex;
-  gap: 48px;
-  align-items: center;
-  flex-wrap: wrap;
-  color: #E5E2DC;
-}
-
-.cnnture-gift-banner h2 {
-  color: #E5E2DC;
-}
-
-.cnnture-gift-banner p {
-  color: #B0ACA6;
-}
-
-/* Newsletter */
-.cnnture-newsletter {
-  text-align: center;
-  padding: 80px 32px;
-  background: var(--bg-warm);
-}
-
-.cnnture-newsletter h3 {
-  font-size: 1.6rem;
-  margin-bottom: 8px;
-}
-
-.cnnture-newsletter p {
-  color: var(--muted-foreground);
-  margin-bottom: 24px;
-}
-
-.cnnture-newsletter form {
-  display: flex;
-  gap: 8px;
-  max-width: 420px;
-  margin: 0 auto;
-}
-
-.cnnture-newsletter input {
-  flex: 1;
-  padding: 10px 16px;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  background: var(--surface);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
   .cnnture-category-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .cnnture-journal-grid {
-    grid-template-columns: 1fr;
-  }
-  .cnnture-seasonal,
-  .cnnture-gift-banner {
-    flex-direction: column;
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
 @media (max-width: 480px) {
   .cnnture-category-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 }

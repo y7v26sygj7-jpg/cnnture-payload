@@ -1,25 +1,16 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@config '../../../tailwind.config.mjs';
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is([data-theme='dark'] *));
-@custom-variant sm (@media (width >= theme(--breakpoint-sm)));
-@custom-variant md (@media (width >= theme(--breakpoint-md)));
-@custom-variant lg (@media (width >= theme(--breakpoint-lg)));
-@custom-variant xl (@media (width >= theme(--breakpoint-xl)));
-@custom-variant 2xl (@media (width >= theme(--breakpoint-2xl)));
 
-/* CNNTURE Brand Variables */
+/* CNNTURE Brand Theme — warm earth tones */
 @theme {
-  --breakpoint-sm: 40rem;
-  --breakpoint-md: 48rem;
-  --breakpoint-lg: 64rem;
-  --breakpoint-xl: 80rem;
-  --breakpoint-2xl: 86rem;
   --font-sans: 'Inter', 'Noto Sans JP', 'Noto Sans KR', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Cormorant Garamond', 'Noto Serif SC', ui-serif, Georgia, serif;
   --font-mono: ui-monospace, monospace;
+  --radius: 2px;
 }
 
 @layer base {
@@ -28,63 +19,26 @@
     font-weight: 300;
     letter-spacing: 0.02em;
   }
+  * {
+    border-color: #E5E1DA;
+  }
+  body {
+    background-color: #F9F7F4;
+    color: #2B2722;
+    min-height: 100vh;
+  }
 }
-
-@plugin "@tailwindcss/typography";
-
-@source inline("lg:col-span-4");
-@source inline("lg:col-span-6");
-@source inline("lg:col-span-8");
-@source inline("lg:col-span-12");
-@source inline("border-border");
-@source inline("bg-card");
-@source inline("border-error");
-@source inline("bg-error/30");
-@source inline("border-success");
-@source inline("bg-success/30");
-@source inline("border-warning");
-@source inline("bg-warning/30");
 
 @layer utilities {
   .container {
     width: 100%;
     margin-inline: auto;
     padding-inline: 1rem;
-  }
-
-  @variant sm {
-    .container {
-      max-width: var(--breakpoint-sm);
-    }
-  }
-
-  @variant md {
-    .container {
-      max-width: var(--breakpoint-md);
-      padding-inline: 2rem;
-    }
-  }
-
-  @variant lg {
-    .container {
-      max-width: var(--breakpoint-lg);
-    }
-  }
-
-  @variant xl {
-    .container {
-      max-width: var(--breakpoint-xl);
-    }
-  }
-
-  @variant 2xl {
-    .container {
-      max-width: var(--breakpoint-2xl);
-    }
+    max-width: 1200px;
   }
 }
 
-/* CNNTURE Light Theme — 茶白基底 / 暖灰 / 墨棕 */
+/* CNNTURE Light Theme */
 :root {
   --background: #F9F7F4;
   --foreground: #2B2722;
@@ -98,6 +52,7 @@
   --secondary-foreground: #2B2722;
   --muted: #F2EDE6;
   --muted-foreground: #8A8680;
+  --accent: #C4A97D;
   --accent-foreground: #2B2722;
   --destructive: #9B6B6B;
   --destructive-foreground: #FCFBF8;
@@ -109,17 +64,15 @@
   --sidebar-foreground: #2B2722;
   --sidebar-primary: #8B7355;
   --sidebar-primary-foreground: #FCFBF8;
-  --sidebar-accent: #8B7355;
+  --sidebar-accent: #C4A97D;
   --sidebar-accent-foreground: #2B2722;
   --sidebar-border: #E5E1DA;
   --sidebar-ring: #8B7355;
   --success: #6B8B6E;
   --warning: #C4A97D;
   --error: #9B6B6B;
-  --accent: #C4A97D;
 }
 
-/* CNNTURE Dark Theme — 墨棕深底 */
 [data-theme='dark'] {
   --background: #2B2722;
   --foreground: #E5E2DC;
@@ -133,6 +86,7 @@
   --secondary-foreground: #E5E2DC;
   --muted: #3A3732;
   --muted-foreground: #8A8680;
+  --accent: #B8A88A;
   --accent-foreground: #E5E2DC;
   --destructive: #9B6B6B;
   --destructive-foreground: #E5E2DC;
@@ -150,7 +104,6 @@
   --success: #5A7A5E;
   --warning: #A89060;
   --error: #8B5B5B;
-  --accent: #B8A88A;
 }
 
 @theme inline {
@@ -173,15 +126,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -193,85 +137,8 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground min-h-[100vh] flex flex-col;
-  }
-}
-
-html {
-  opacity: 0;
-}
-
-html[data-theme='dark'],
-html[data-theme='light'] {
-  opacity: initial;
-}
-
-a,
-input,
-button {
-  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
-}
-
-/* === CNNTURE Scroll Reveal Animations === */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
-
-[data-reveal].revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Staggered children */
-[data-reveal-stagger] > * {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-[data-reveal-stagger].revealed > *:nth-child(1) { transition-delay: 0s; }
-[data-reveal-stagger].revealed > *:nth-child(2) { transition-delay: 0.1s; }
-[data-reveal-stagger].revealed > *:nth-child(3) { transition-delay: 0.2s; }
-[data-reveal-stagger].revealed > *:nth-child(4) { transition-delay: 0.3s; }
-[data-reveal-stagger].revealed > *:nth-child(5) { transition-delay: 0.4s; }
-[data-reveal-stagger].revealed > *:nth-child(6) { transition-delay: 0.5s; }
-[data-reveal-stagger].revealed > * { opacity: 1; transform: translateY(0); }
-
-/* Fade-in only */
-[data-reveal-fade] {
-  opacity: 0;
-  transition: opacity 1s ease-out;
-}
-
-[data-reveal-fade].revealed {
-  opacity: 1;
-}
-
-/* Product card image scale-on-hover */
-.product-card__image {
-  transition: transform 0.6s ease;
-  overflow: hidden;
-}
-
-.product-card:hover .product-card__image {
-  transform: scale(1.04);
-}
-
-/* Smooth page transitions */
-main {
-  animation: page-in 0.5s ease-out;
-}
-
-@keyframes page-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
 }
