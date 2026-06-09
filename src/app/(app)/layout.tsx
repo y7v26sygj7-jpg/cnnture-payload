@@ -7,6 +7,7 @@ import { Providers } from '@/providers'
 import { InitTheme } from '@/providers/Theme/InitTheme'
 import { LocaleProvider } from '@/providers/LocaleProvider'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { AutoSeed } from '@/providers/AutoSeed'
 import { defaultLocale, type Locale, uiTranslations } from '@/i18n/config'
 import React from 'react'
 import './brand.css'
@@ -33,6 +34,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body>
         <Providers>
           <LocaleProvider locale={locale} translations={translations}>
+            <AutoSeed />
             <Header />
             <main>{children}</main>
             <Footer />
