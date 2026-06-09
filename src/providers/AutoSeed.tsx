@@ -2,49 +2,38 @@
 
 import { useEffect, useState } from 'react'
 
+/**
+ * Shows a loading screen while the Payload server initializes on cold start.
+ * The actual seeding is handled by payload.config.ts onInit hook.
+ * This component just shows a polite loading state for the first visit.
+ */
 export function AutoSeed() {
-  const [seeding, setSeeding] = useState(false)
-  const [done, setDone] = useState(false)
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
-    // Only run once on first visit
-    if (done || seeding) return
+    // Hide after 8 seconds max (server initialization time)
+    const t = setTimeout(() => setVisible(false), 8000)
+    // Also try fetching the homepage - if it returns, we're ready
+    fetch('/zh')
+      .then((r) => { if (r.ok) setVisible(false) })
+      .catch(() => {})
+    return () => clearTimeout(t)
+  }, [])
 
-    const seeded = sessionStorage.getItem('cnnture-seeded')
-    if (seeded) return
-
-    setSeeding(true)
-    fetch('/zh/api/auto-seed', { method: 'POST' })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.seeded) {
-          sessionStorage.setItem('cnnture-seeded', '1')
-          window.location.reload()
-        }
-        setDone(true)
-      })
-      .catch(() => setDone(true))
-  }, [done, seeding])
-
-  if (!seeding) return null
+  if (!visible) return null
 
   return (
     <div style={{
       position: 'fixed', inset: 0, background: '#F9F7F4',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      zIndex: 99999, fontFamily: 'Cormorant Garamond, serif',
+      zIndex: 99999,
     }}>
-      <h2 style={{ fontSize: 28, fontWeight: 300, color: '#2B2722', marginBottom: 16, letterSpacing: '0.04em' }}>
+      <h2 style={{ fontSize: 28, fontWeight: 300, color: '#2B2722', marginBottom: 12, letterSpacing: '0.04em', fontFamily: 'Cormorant Garamond, serif' }}>
         CNNTURE 中式自然
       </h2>
-      <p style={{ fontSize: 15, color: '#8A8680', marginBottom: 32 }}>
-        正在初始化网站内容...
+      <p style={{ fontSize: 14, color: '#8A8680', fontFamily: 'Inter, sans-serif' }}>
+        网站正在启动...
       </p>
-      <div style={{ width: 200, height: 1, background: '#E5E1DA', overflow: 'hidden', borderRadius: 1 }}>
-        <div style={{ width: '60%', height: '100%', background: '#8B7355',
-          animation: 'seed-progress 2s ease-in-out infinite' }} />
-      </div>
-      <style>{`@keyframes seed-progress { 0%{transform:translateX(-100%)}100%{transform:translateX(266%)} }`}</style>
     </div>
   )
 }

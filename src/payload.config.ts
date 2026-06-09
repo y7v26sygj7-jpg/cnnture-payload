@@ -87,6 +87,29 @@ export default buildConfig({
       ]
     },
   }),
+  onInit: async (payload) => {
+    // Auto-seed on server start if DB is empty (first deploy)
+    try {
+      const existing = await payload.find({ collection: 'pages', where: { slug: { equals: 'home' } }, limit: 1 })
+      if (existing.totalDocs === 0) {
+        payload.logger.info('Auto-seeding CNNTURE on first start...')
+        const cats = ['草本饰品 Herbal Jewelry','草本香薰 Herbal Aromatherapy','禅意手串 Zen Bracelets','草木文创 Herbal Stationery','文化典藏 Cultural Treasures','赠礼系列 Gifting']
+        for (const c of cats) {
+          await payload.create({ collection: 'categories', data: { title: c, slug: c }, context: { disableRevalidate: true } })
+        }
+        await payload.create({ collection: 'pages', data: { slug:'home', _status:'published', title:'首页',
+          hero:{ type:'lowImpact', richText:{ root:{ type:'root', children:[
+            { type:'heading', children:[{ type:'text', detail:0, format:0, mode:'normal', style:'', text:'以草木为骨', version:1 }], direction:'ltr', format:'', indent:0, tag:'h1', version:1 },
+            { type:'heading', children:[{ type:'text', detail:0, format:0, mode:'normal', style:'', text:'以禅意为魂', version:1 }], direction:'ltr', format:'', indent:0, tag:'h1', version:1 },
+            { type:'paragraph', children:[{ type:'text', detail:0, format:0, mode:'normal', style:'', text:'Bones of Herbs · Soul of Silence', version:1 }], direction:'ltr', format:'', indent:0, textFormat:0, version:1 },
+            { type:'paragraph', children:[{ type:'text', detail:0, format:0, mode:'normal', style:'', text:'六种草本性格 · 六种东方器物 · 一种生活态度', version:1 }], direction:'ltr', format:'', indent:0, textFormat:0, version:1 },
+          ], direction:'ltr', format:'', indent:0, version:1 } }, links:[ { link:{ type:'custom', appearance:'default', label:'探 索 器 物', url:'/shop' } } ] },
+          meta:{ title:'CNNTURE 中式自然', description:'以草木为骨，以禅意为魂。东方草本器物品牌。' },
+        }, context: { disableRevalidate: true } })
+        payload.logger.info('CNNTURE auto-seed complete!')
+      }
+    } catch (e) { payload.logger.warn('Auto-seed skipped: ' + (e as Error).message) }
+  },
   endpoints: [],
   globals: [Header, Footer],
   plugins,
