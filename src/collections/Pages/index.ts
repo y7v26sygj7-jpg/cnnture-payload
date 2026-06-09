@@ -88,6 +88,7 @@ export const Pages: CollectionConfig = {
             {
               name: 'layout',
               type: 'blocks',
+              localized: true,
               blocks: [
                 CallToAction,
                 Content,

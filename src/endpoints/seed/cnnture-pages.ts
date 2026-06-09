@@ -341,28 +341,30 @@ export async function seedBrandPages(payload: Payload): Promise<void> {
   const locales = ['zh', 'en', 'ja', 'fr', 'de', 'ko'] as const
 
   for (const page of cnnturePages) {
-    // Create page in default locale (zh) first
-    const zhData = {
-      slug: page.slug,
-      _status: 'published',
-      title: page.title.zh,
-      hero: { type: 'lowImpact', richText: { root: { type: 'root', children: [{ type: 'heading', children: [{ type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: page.title.zh, version: 1 }], direction: 'ltr', format: '', indent: 0, tag: 'h1', version: 1 }], direction: 'ltr', format: '', indent: 0, version: 1 } } },
-      layout: page.layout.zh || [],
-      meta: { title: page.meta.zh?.title || page.title.zh, description: page.meta.zh?.description || '' },
-    }
-
+    // Create in zh first — all non-localized data (hero, layout) set once here
     const created = await payload.create({
       collection: 'pages',
       locale: 'zh',
-      data: zhData,
       context: { disableRevalidate: true },
+      data: {
+        slug: page.slug,
+        _status: 'published',
+        title: page.title.zh,
+        hero: { type: 'lowImpact', richText: { root: { type: 'root', children: [{ type: 'heading', children: [{ type: 'text', detail: 0, format: 0, mode: 'normal', style: '', text: page.title.zh, version: 1 }], direction: 'ltr', format: '', indent: 0, tag: 'h1', version: 1 }], direction: 'ltr', format: '', indent: 0, version: 1 } } },
+        layout: page.layout.zh || [],
+        meta: { title: page.meta.zh?.title || page.title.zh, description: page.meta.zh?.description || '' },
+      },
     })
 
-    // Update page in other locales
+    // For other locales: ONLY update localized fields (title, meta).
+    // hero and layout are NOT localized in Pages collection config,
+    // so writing them via payload.update with a different locale
+    // overwrites the document-level value, causing last-locale-wins bug.
+    // All locales share the zh hero/layout via fallback: true.
     for (const loc of locales) {
       if (loc === 'zh') continue
       const locData = page.layout[loc]
-      if (!locData) continue // skip if no translation for this locale
+      if (!locData) continue
 
       await payload.update({
         collection: 'pages',
